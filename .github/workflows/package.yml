@@ -1,0 +1,32 @@
+name: Package Python Application
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install -r requirements.txt
+
+    - name: Package the application
+      run: |
+        pyinstaller --onefile scrapergui.py
+
+    - name: Upload executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: scraper-executable
+        path: dist/
